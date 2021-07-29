@@ -218,33 +218,13 @@ client.on('message', async message => {
         message.channel.send(avatarembed);
     }
 
-    if (command === 'color') {
-        const Mod = message.member.guild.roles.cache.get('815283420044197888');
-        if (!message.member.roles.cache.get('817813111339352064')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
-        if (!args[0]) return message.channel.send(`**[2] - ERR_TIDAK_ADA_ARGS**`);
-        Mod.edit({
-            color: args[0]
-        })
-        message.channel.send('**Success !!**');
-    }
-
-    if (command === 'name') {
-        const Mod = message.member.guild.roles.cache.get('815283420044197888');
-        if (!message.member.roles.cache.get('817813111339352064')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
-        if (!args[0]) return message.channel.send(`**[2] - ERR_TIDAK_ADA_ARGS**`);
-        Mod.edit({
-            name: args.join(" ")
-        })
-        message.channel.send('**Success !!**');
-    }
-    
     if (command === 'aboutbot') { 
         const aboutbotembed = new Discord.MessageEmbed()
         
         .setColor('#89e0dc')
-        .setTitle('BOT Version')
+        .setTitle('About BOT')
         .setThumbnail(`${message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
-        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **/**\n\nDev : ${botauthor}\n\nBahasa : **JavaScript**\n\nPackage : **Discord.js**\n\nInvite to server : **https://mephysics.live**`)
+        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nBahasa : **JavaScript**\n\nPackage : **Discord.js**\n\nInvite to server : **https://mephysics.live**`)
         .setFooter(`Direquest oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setTimestamp()
         message.channel.send(aboutbotembed);
@@ -255,7 +235,6 @@ client.on('message', async message => {
         const channel = client.channels.cache.get(args[0])
         if (!client.channels.cache.get(args[0])) return message.channel.send('Error');
         if (!args[1]) return message.channel.send('**Berikan args**');
-
         channel.send(args.slice(1).join(" "));
         message.react('✅');
     }
@@ -305,7 +284,7 @@ client.on('message', async message => {
         .setDescription(`**⚠️ - ${mentionsmember.nickname} diunmuted oleh ${message.member.nickname}**`)
         .setTimestamp()
 
-        channellog.send(channellogembed)
+        channellog.send(channellogembed);
     }
 
     if (command === 'warn') {
@@ -375,10 +354,33 @@ client.on('message', async message => {
         }
     }
 
+    if (command === 'nickname') {
+        if (!message.member.roles.cache.get(process.env.MOD_ROLE)) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
+        if (!message.mentions.users.first()) return message.channel.send('Mention user untuk menggunakan command')
+        const membername = message.mentions.members.first();
+        message.channel.send('**Please confirm your choice**\n\`\`\`[Yes] or [No]\`\`\`')
+        const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+        collector.on('collect', message => {
+            const msgct = message.content.toLowerCase();
+            if (msgct === 'yes') {
+                membername.setNickname(args.slice(1).join(" "));
+                message.channel.send(`Nickname <@${membername.id}> telah diubah menjadi **${args.slice(1).join(" ")}**`);
+            } else if (msgct === 'no') {
+                message.channel.send('**Canceled**');
+            }
+        })
+    }
+
     if (command === 'register') {
         message.delete({timeout: 5000});
-        if (!message.member.roles.cache.get(process.env.UNREGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**')
-        if (message.member.roles.cache.get(process.env.REGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**')
+
+        if (!message.member.roles.cache.get(process.env.UNREGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
+            message.delete({timeout: 5000})
+        })
+        if (message.member.roles.cache.get(process.env.REGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
+            message.delete({timeout: 5000})
+        })
+
         const channel = client.channels.cache.get(process.env.GENERALCHAT);
         const user = message.author.id
         const emoji = client.emojis.cache.get('835987657892298802');
@@ -414,16 +416,33 @@ client.on('message', async message => {
         if (!message.member.voice.channel) return message.channel.send(`Kamu tidak divoice channel !`);
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
-        client.player.skip(message);
-        message.channel.send('Lagu telah diskip !')
+        const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+        collector.on('collect', message => {
+            const msgct = message.content.toLowerCase();
+            if (msgct === 'yes') {
+                client.player.stop(message);
+                message.channel.send('Lagu telah diskip !')
+            } else if (msgct === 'no') {
+                message.channel.send('**Canceled**');
+            }
+        })
     }
 
     if (command === 'stop') {
         if (!message.member.voice.channel) return message.channel.send(`Kamu tidak divoice channel !`);
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
-        client.player.stop(message);
-        message.channel.send('Lagu telah distop !')
+        message.channel.send('**Please confirm your choice**\n\`\`\`[Yes]\`\`\` or \`\`\`[No]\`\`\`')
+        const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+        collector.on('collect', message => {
+            const msgct = message.content.toLowerCase();
+            if (msgct === 'yes') {
+                client.player.stop(message);
+                message.channel.send('Lagu telah distop !')
+            } else if (msgct === 'no') {
+                message.channel.send('**Canceled**');
+            }
+        })
     }
 
     if (command === 'pause') {
