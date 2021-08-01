@@ -251,9 +251,9 @@ client.on('message', async message => {
 
     if (command === 'mute') {
         if (!message.member.hasPermission('MANAGE_ROLES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
-        const muterole = message.guild.roles.cache.get(process.env.MUTEROLE);
+        const muterole = message.guild.roles.cache.get(process.env.MUTE_ROLE);
         const mentionsmember = message.mentions.members.first();
-        if (mentionsmember.roles.cache.get(process.env.MUTEROLE)) return message.channel.send('**User masih dimute**');
+        if (mentionsmember.roles.cache.get(process.env.MUTE_ROLE)) return message.channel.send('**User masih dimute**');
         mentionsmember.roles.add(muterole);
         message.channel.send(`**<@${mentionsmember.id}>** telah dimute oleh **<@${message.author.id}>**`);
         
@@ -270,9 +270,9 @@ client.on('message', async message => {
 
     if (command === 'unmute') {
         if (!message.member.hasPermission('MANAGE_ROLES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
-        const muterole = message.guild.roles.cache.get(process.env.MUTEROLE);
+        const muterole = message.guild.roles.cache.get(process.env.MUTE_ROLE);
         const mentionsmember = message.mentions.members.first();
-        if (!mentionsmember.roles.cache.get(process.env.MUTEROLE)) return message.channel.send('**User tidak dimute**');
+        if (!mentionsmember.roles.cache.get(process.env.MUTE_ROLE)) return message.channel.send('**User tidak dimute**');
         mentionsmember.roles.remove(muterole);
         message.channel.send(`**<@${mentionsmember.id}>** telah diunmute oleh **<@${message.author.id}>**`);
 
@@ -416,7 +416,8 @@ client.on('message', async message => {
         if (!message.member.voice.channel) return message.channel.send(`Kamu tidak divoice channel !`);
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
-        const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+        message.channel.send('**Please confirm your choice**\n\`\`\`[Yes]\`\`\` or \`\`\`[No]\`\`\`')
+        const collector = new Discord.MessageCollector(message.channel, { time: 10000 });
         collector.on('collect', message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
@@ -433,7 +434,7 @@ client.on('message', async message => {
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
         message.channel.send('**Please confirm your choice**\n\`\`\`[Yes]\`\`\` or \`\`\`[No]\`\`\`')
-        const collector = new Discord.MessageCollector(message.channel, m => m.author.id === message.author.id, { time: 10000 });
+        const collector = new Discord.MessageCollector(message.channel, { time: 10000 });
         collector.on('collect', message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
