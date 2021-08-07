@@ -290,13 +290,12 @@ client.on('message', async message => {
     if (command === 'warn') {
         if (!message.member.hasPermission('MANAGE_ROLES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
         const mentionsuser = message.mentions.members.first();
-        const mentionsavatar = message.mentions.users.first();
-        if (!message.mentions.users.first()) return message.channel.send('**Mention user sebelum memberikan alasan\n\n```/warn @Mephysto SPAM```**')
+        if (!message.mentions.users.first()) return message.channel.send(`**Mention user sebelum memberikan alasan\n\n\`\`\`/warn <mention> <reason>\`\`\`**`)
         const warnembed = new Discord.MessageEmbed()
 
         .setColor('#f82c2c')
         .setTitle(`**${mentionsuser.username} Warning**`)
-        .setThumbnail(`${mentionsavatar.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
+        .setThumbnail(`${mentionsuser.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setDescription(`${mentionsuser} **berhasil diwarn dengan alasan:**\`\`\`diff\n- ${args.slice(1).join(" ")}\`\`\``)
         .setFooter(`Diwarn oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setTimestamp()
@@ -307,7 +306,7 @@ client.on('message', async message => {
         let channellogembed = new Discord.MessageEmbed()
 
         .setColor('#ff0000')
-        .setAuthor(`${mentionsuser.nickname} Warning`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
+        .setAuthor(`${mentionsuser.username} Warning`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
         .setDescription(`**⚠️ - ${mentionsuser.username} telah diwarn oleh ${message.member.username}**`)
         .setTimestamp()
 
@@ -417,11 +416,11 @@ client.on('message', async message => {
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
         message.channel.send('**Please confirm your choice**\n\`\`\`[Yes]\`\`\` or \`\`\`[No]\`\`\`')
-        const collector = new Discord.MessageCollector(message.channel, { time: 10000 });
+        const collector = new Discord.MessageCollector(message.channel, m => m.member.voice.channel.id === message.guild.me.voice.channel.id, { time: 10000 });
         collector.on('collect', message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
-                client.player.stop(message);
+                client.player.skip(message);
                 message.channel.send('Lagu telah diskip !')
             } else if (msgct === 'no') {
                 message.channel.send('**Canceled**');
@@ -434,7 +433,7 @@ client.on('message', async message => {
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
         message.channel.send('**Please confirm your choice**\n\`\`\`[Yes]\`\`\` or \`\`\`[No]\`\`\`')
-        const collector = new Discord.MessageCollector(message.channel, { time: 10000 });
+        const collector = new Discord.MessageCollector(message.channel, m => m.member.voice.channel.id === message.guild.me.voice.channel.id, { time: 10000 });
         collector.on('collect', message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
