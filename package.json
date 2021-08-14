@@ -1,6 +1,6 @@
 {
   "name": "mephystos",
-  "version": "4.3.2",
+  "version": "4.3.3",
   "description": "MephystOS BOT",
   "main": "index.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "reconlx": "^1.2.41",
     "snakecord": "^1.0.6",
     "weather-js": "^2.0.0",
-    "ytdl-core": "^4.9.0"
+    "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
     "eslint": "^7.25.0"

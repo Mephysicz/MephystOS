@@ -224,7 +224,7 @@ client.on('message', async message => {
         .setColor('#89e0dc')
         .setTitle('About BOT')
         .setThumbnail(`${message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
-        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nBahasa : **JavaScript**\n\nPackage : **Discord.js**\n\nInvite to server : **https://mephysics.live**`)
+        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nBahasa : **JavaScript**\n\nSource Code : **https://github.com/Mephysics/MephystOS**`)
         .setFooter(`Direquest oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setTimestamp()
         message.channel.send(aboutbotembed);
@@ -421,7 +421,7 @@ client.on('message', async message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
                 client.player.skip(message);
-                message.channel.send('Lagu telah diskip !')
+                message.channel.send('**Lagu telah diskip !**')
             } else if (msgct === 'no') {
                 message.channel.send('**Canceled**');
             }
@@ -438,7 +438,7 @@ client.on('message', async message => {
             const msgct = message.content.toLowerCase();
             if (msgct === 'yes') {
                 client.player.stop(message);
-                message.channel.send('Lagu telah distop !')
+                message.channel.send('**Lagu telah distop !**')
             } else if (msgct === 'no') {
                 message.channel.send('**Canceled**');
             }
@@ -450,7 +450,7 @@ client.on('message', async message => {
         if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send(`Kamu tidak divoice channel yang sama !`);
         if (client.player.getQueue(message).paused) return message.channel.send(`Music sedang dipause !`);
         client.player.pause(message);
-        message.channel.send(`Lagu ${client.player.getQueue(message).playing.title} dihentikan !`);
+        message.channel.send(`**Lagu ${client.player.getQueue(message).playing.title} dihentikan !**`);
     }
 
     if (command === 'resume') {
@@ -459,7 +459,7 @@ client.on('message', async message => {
         if (!client.player.getQueue(message)) return message.channel.send('Tidak ada music yang berjalan !');
         if (!client.player.getQueue(message).paused) return message.channel.send(`Lagu sedang berlangsung !`);
         client.player.resume(message);
-        message.channel.send(`Lagu ${client.player.getQueue(message).playing.title} dilanjutkan !`);
+        message.channel.send(`**Lagu ${client.player.getQueue(message).playing.title} dilanjutkan !**`);
     }
 
     if (command === 'volume') {
@@ -642,7 +642,7 @@ client.on('message', async message => {
                 giveawayEnded: '\`\`\`Ended !!\`\`\`',
                 inviteToParticipate: 'React emoji 🎉 untuk berpartisipasi!',
                 timeRemaining: 'Waktu tersisa: **{duration}**',
-                winMessage: 'Selamat, {winners}! Kamu memenangkan **{prize}** !!\nHadiah akan dikirim lewat DM oleh BOT',
+                winMessage: 'Selamat, {winners}! Kamu memenangkan **{prize}** !!',
                 embedFooter: args.slice(3).join(' '),
                 noWinner: 'Tidak Valid',
                 winners: 'winner(s) ',
@@ -673,6 +673,7 @@ client.on('message', async message => {
 
     if (command === 'end') {
         if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini')
+        if (!args.join(' ')) return message.channel.send(`${prefix}end <msgid>`);
         const messageID = args[0];
         client.giveawaysManager.end(messageID).then(() => {
             message.channel.send('**Success !!**');
@@ -683,6 +684,7 @@ client.on('message', async message => {
 
     if (command === 'delete-giveaway') {
         if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini')
+        if (!args.join(' ')) return message.channel.send(`${prefix}end <msgid>`);
         const messageID = args[0];
         client.giveawaysManager.delete(messageID).then(() => {
             message.channel.send('**Success !!**');
