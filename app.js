@@ -188,7 +188,7 @@ client.on('message', async message => {
     }
 
     if (command === 'link') {
-        const serverid = client.guilds.cache.get('332472484572037124');
+        const serverid = client.guilds.cache.get(process.env.SERVERID);
         const embedmessage = new Discord.MessageEmbed()
 
         .setColor('#89e0dc')
@@ -213,7 +213,7 @@ client.on('message', async message => {
         .setTitle('Avatar')
         .setDescription(`Avatarnya ${user.username}`)
         .setImage(`${user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
-        .setFooter(`foto profilmu bagus juga yaa ${user.username}`, `${user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
+        .setFooter(`${user.username} Photo Profile`, `${user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
 
         message.channel.send(avatarembed);
     }
@@ -224,7 +224,7 @@ client.on('message', async message => {
         .setColor('#89e0dc')
         .setTitle('About BOT')
         .setThumbnail(`${message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
-        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nBahasa : **JavaScript**\n\nSource Code : **https://github.com/Mephysics/MephystOS**`)
+        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nSource Code : **https://github.com/Mephysics/MephystOS**`)
         .setFooter(`Direquest oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setTimestamp()
         message.channel.send(aboutbotembed);
@@ -252,7 +252,8 @@ client.on('message', async message => {
     if (command === 'mute') {
         if (!message.member.hasPermission('MANAGE_ROLES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
         const muterole = message.guild.roles.cache.get(process.env.MUTE_ROLE);
-        const mentionsmember = message.mentions.members.first();
+        const mentionsusername = message.mentions.users.first()
+        const mentionsmember = message.mentions.members.first()
         if (mentionsmember.roles.cache.get(process.env.MUTE_ROLE)) return message.channel.send('**User masih dimute**');
         mentionsmember.roles.add(muterole);
         message.channel.send(`**<@${mentionsmember.id}>** telah dimute oleh **<@${message.author.id}>**`);
@@ -262,7 +263,7 @@ client.on('message', async message => {
 
         .setColor('#ff0000')
         .setAuthor(`Member Muted`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
-        .setDescription(`**⚠️ - ${mentionsmember.nickname} dimuted oleh ${message.member.nickname}**`)
+        .setDescription(`**⚠️ - ${mentionsusername.username} dimuted oleh ${message.author.username}**`)
         .setTimestamp()
 
         channellog.send(channellogembed)
@@ -271,7 +272,8 @@ client.on('message', async message => {
     if (command === 'unmute') {
         if (!message.member.hasPermission('MANAGE_ROLES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini');
         const muterole = message.guild.roles.cache.get(process.env.MUTE_ROLE);
-        const mentionsmember = message.mentions.members.first();
+        const mentionsusername = message.mentions.users.first()
+        const mentionsmember = message.mentions.members.first()
         if (!mentionsmember.roles.cache.get(process.env.MUTE_ROLE)) return message.channel.send('**User tidak dimute**');
         mentionsmember.roles.remove(muterole);
         message.channel.send(`**<@${mentionsmember.id}>** telah diunmute oleh **<@${message.author.id}>**`);
@@ -281,7 +283,7 @@ client.on('message', async message => {
 
         .setColor('#00ff00')
         .setAuthor(`Member Unmuted`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
-        .setDescription(`**⚠️ - ${mentionsmember.nickname} diunmuted oleh ${message.member.nickname}**`)
+        .setDescription(`**⚠️ - ${mentionsusername.username} diunmuted oleh ${message.author.username}**`)
         .setTimestamp()
 
         channellog.send(channellogembed);
@@ -306,7 +308,7 @@ client.on('message', async message => {
         let channellogembed = new Discord.MessageEmbed()
 
         .setColor('#ff0000')
-        .setAuthor(`${mentionsuser.username} Warning`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
+        .setAuthor(`${mentionsuser.username} Warning`, mentionsuser.avatarURL({format : 'png', dynamic : true, size : 4096}))
         .setDescription(`**⚠️ - ${mentionsuser.username} telah diwarn oleh ${message.member.username}**`)
         .setTimestamp()
 
@@ -368,40 +370,6 @@ client.on('message', async message => {
                 message.channel.send('**Canceled**');
             }
         })
-    }
-
-    if (command === 'register') {
-        message.delete({timeout: 5000});
-
-        if (!message.member.roles.cache.get(process.env.UNREGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
-            message.delete({timeout: 5000})
-        })
-        if (message.member.roles.cache.get(process.env.REGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
-            message.delete({timeout: 5000})
-        })
-
-        const channel = client.channels.cache.get(process.env.GENERALCHAT);
-        const user = message.author.id
-        const emoji = client.emojis.cache.get('835987657892298802');
-        const embednickname = new Discord.MessageEmbed() .setColor('#00ff00') .setAuthor(`${message.member.nickname} Joined`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})) .setDescription(`**${emoji} - ${message.member.nickname} telah join ke server**`) .setTimestamp()
-        
-        message.member.roles.add(process.env.REGISTER_ID);
-        let channellog = client.channels.cache.get(process.env.CHANNELLOGID)
-        if (message.member.nickname) return channellog.send(embednickname)
-        let channellogembed = new Discord.MessageEmbed()
-
-        .setColor('#00ff00')
-        .setAuthor(`Member Joined`, message.author.avatarURL({format : 'png', dynamic : true, size : 4096}))
-        .setDescription(`**${emoji} - ${message.author.username} telah join ke server**`)
-        .setFooter(message.author.username , message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
-        .setTimestamp()
-
-        channellog.send(channellogembed)
-        message.channel.send(`**Selesai, anda sudah teregistrasi...\nSelamat datang <@${user}> kamu sudah bisa chat di ${channel} setelah membaca pesan ini**`)
-        .then(message => {
-            message.delete({timeout: 5000})
-        })
-        message.member.roles.remove(process.env.UNREGISTER_ID);
     }
 
     if(command === 'play') {
@@ -684,7 +652,7 @@ client.on('message', async message => {
 
     if (command === 'delete-giveaway') {
         if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send('Kamu tidak memiliki izin untuk menggunakan command ini')
-        if (!args.join(' ')) return message.channel.send(`${prefix}end <msgid>`);
+        if (!args.join(' ')) return message.channel.send(`${prefix}delete-giveaway <msgid>`);
         const messageID = args[0];
         client.giveawaysManager.delete(messageID).then(() => {
             message.channel.send('**Success !!**');
@@ -750,6 +718,41 @@ client.on('message', async message => {
         .setAuthor(`Bitrate Changed`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
         .setDescription(`**${emoji} - Bitrate room (${message.member.voice.channel.name} ) telah diubah ke ${bitrateargs}**`)
         .setFooter(`Diubah oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
+        .setTimestamp()
+
+        channellog.send(channellogembed)
+    }
+
+    if (command === 'register') {
+        message.delete({timeout: 5000});
+
+        if (!message.member.roles.cache.get(process.env.UNREGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
+            message.delete({timeout: 5000})
+        })
+        
+        if (message.member.roles.cache.get(process.env.REGISTER_ID)) return message.channel.send('**Kamu sudah teregistrasi**').then(message => {
+            message.delete({timeout: 5000})
+        })
+
+        const channel = client.channels.cache.get(process.env.GENERALCHAT);
+        const user = message.author.id
+        const emoji = client.emojis.cache.get('835987657892298802');
+        
+        message.member.roles.add(process.env.REGISTER_ID);
+        let channellog = client.channels.cache.get(process.env.CHANNELLOGID)
+
+        message.channel.send(`**Selesai, anda sudah teregistrasi...\nSelamat datang <@${user}> kamu sudah bisa chat di ${channel} setelah membaca pesan ini**`)
+        .then(message => {
+            message.delete({timeout: 5000})
+        })
+        message.member.roles.remove(process.env.UNREGISTER_ID);
+
+        let channellogembed = new Discord.MessageEmbed()
+
+        .setColor('#00ff00')
+        .setAuthor(`Member Joined`, message.author.avatarURL({format : 'png', dynamic : true, size : 4096}))
+        .setDescription(`**${emoji} - ${message.author.username} telah join ke server**`)
+        .setFooter(message.author.username , message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
         .setTimestamp()
 
         channellog.send(channellogembed)
