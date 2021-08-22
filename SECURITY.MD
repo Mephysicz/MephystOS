@@ -2,6 +2,7 @@
 
 |Version|Vulnerability|
 |-|-|
+|4.3.4|:white_check_mark:|
 |4.3.3|:white_check_mark:|
 |4.3.2|:white_check_mark:|
 |4.3.1|:x:|
