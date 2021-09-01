@@ -2,9 +2,10 @@
 
 |Version|Vulnerability|
 |-|-|
-|4.3.4|:white_check_mark:|
-|4.3.3|:white_check_mark:|
-|4.3.2|:white_check_mark:|
+|4.3.5|:white_check_mark:|
+|4.3.4|:x:|
+|4.3.3|:x:|
+|4.3.2|:x:|
 |4.3.1|:x:|
 |4.3.0|:x:|
 |4.2.4|:x:|
