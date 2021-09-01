@@ -224,7 +224,7 @@ client.on('message', async message => {
         .setColor('#89e0dc')
         .setTitle('About BOT')
         .setThumbnail(`${message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
-        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nSource Code : **https://github.com/Mephysics/MephystOS**`)
+        .setDescription(`Nama : **${message.client.user.username}**\n\nVersi : **${botversion}**\n\nKeyword : **${prefix}**\n\nDev : **${botauthor}**\n\nSource Code : **https://mephysics.github.io/MephystOS**`)
         .setFooter(`Direquest oleh ${message.author.username}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`)
         .setTimestamp()
         message.channel.send(aboutbotembed);
@@ -668,8 +668,6 @@ client.on('message', async message => {
         })
         message.channel.send('**Locked !!**');
         let channellog = client.channels.cache.get(process.env.CHANNELLOGID);
-        const embednickname = new Discord.MessageEmbed() .setColor('#ff0000') .setAuthor(`Channel Lock`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})) .setDescription(`**🔓 - Channel ${message.member.voice.channel.name} Locked**`) .setFooter(`Locked by ${message.member.nickname}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`) .setFooter(`Locked by ${message.member.nickname}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`) .setTimestamp()
-        if (message.member.nickname) return channellog.send(embednickname)
         let channellogembed = new Discord.MessageEmbed()
 
         .setColor('#ff0000')
@@ -688,8 +686,6 @@ client.on('message', async message => {
         })
         message.channel.send('**Unlocked !!**');
         let channellog = client.channels.cache.get(process.env.CHANNELLOGID);
-        const embednickname = new Discord.MessageEmbed() .setColor('#00ff00') .setAuthor(`Channel Unlock`, message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096})) .setDescription(`**🔓 - Channel ${message.member.voice.channel.name} Unlocked**`) .setFooter(`Unlocked by ${message.member.nickname}`, `${message.author.avatarURL({format : 'png', dynamic : true, size : 4096})}`) .setTimestamp()
-        if (message.member.nickname) return channellog.send(embednickname)
         let channellogembed = new Discord.MessageEmbed()
 
         .setColor('#00ff00')
