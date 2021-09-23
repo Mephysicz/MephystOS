@@ -1,12 +1,7 @@
-const prefix = process.env.PREFIX;
-
 module.exports = {
     name: 'help',
 
     execute(message) {
-        if (message.member.roles.cache.get(process.env.UNREGISTER_ID)) return message.channel.send(`**Harap registrasi terlebih dahulu dengan mengetik \`${prefix}register\` sebelum menggunakan BOT**`).then(message => {
-            message.delete({timeout: 5000})
-        })
             message.channel.send({
                 embed: {
                     color: '#89e0dc',
