@@ -746,9 +746,9 @@ client.on('message', async message => {
         let channellogembed = new Discord.MessageEmbed()
 
         .setColor('#00ff00')
-        .setAuthor(`Member Joined`, message.author.avatarURL({format : 'png', dynamic : true, size : 4096}))
+        .setAuthor(`Member Joined`, message.author.avatarURL({format : 'png', dynamic : true, size : 1024}))
         .setDescription(`**${emoji} - ${message.author.username} telah join ke server**`)
-        .setFooter(message.author.username , message.client.user.avatarURL({format : 'png', dynamic : true, size : 4096}))
+        .setFooter(message.author.username , message.client.user.avatarURL({format : 'png', dynamic : true, size : 1024}))
         .setTimestamp()
 
         channellog.send(channellogembed)
